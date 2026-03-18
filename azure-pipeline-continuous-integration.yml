@@ -1,0 +1,35 @@
+trigger:
+- main
+
+pr:
+- none
+
+stages:
+- stage: ci_stage
+  displayName: Continuous Integration stage
+  pool: Azure Pipelines
+  jobs:
+  - job: ci_job
+    displayName: Continuous Integration job
+    steps:
+    - bash: |
+        git remote set-url origin https://merkatorgis:$(GITHUB_PASSWORD)@github.com/merkatorgis/docker4gis-postgis-ddl.git
+      displayName: Git login
+    
+    - bash: |
+        echo '$(DOCKER_PASSWORD)' | docker login -u=docker4gis --password-stdin docker.io
+      displayName: Docker login
+    
+    - bash: |
+        git config --global user.email 'pipeline@azure.com'
+        git config --global user.name 'Azure Pipeline'
+      displayName: Git config
+    
+    - bash: |
+        git checkout -b main
+        git push --set-upstream origin main
+      displayName: Git undo detached state
+    
+    - bash: |
+        npx --yes docker4gis@latest push
+      displayName: docker4gis push
