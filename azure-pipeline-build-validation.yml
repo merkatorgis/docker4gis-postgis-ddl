@@ -1,0 +1,17 @@
+trigger:
+- none
+
+pr:
+- main
+
+stages:
+- stage: pr_stage
+  displayName: Pull Request stage
+  pool: Azure Pipelines
+  jobs:
+  - job: pr_job
+    displayName: Pull Request job
+    steps:
+    - bash: |
+        npx --yes docker4gis@latest build
+      displayName: docker4gis build

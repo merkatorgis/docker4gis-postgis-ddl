@@ -1,0 +1,10 @@
+#!/bin/sh
+set -e
+
+if [ "$1" = 'ddl' ]; then
+    shift 1
+    exec /onstart.sh "$@"
+fi
+
+# This allows you to, in rare cases, run a container with a different command.
+exec "$@"
