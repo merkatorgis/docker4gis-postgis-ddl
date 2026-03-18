@@ -8,6 +8,7 @@ export PGUSER=${PGUSER:-postgres}
 export PGPASSWORD=${PGPASSWORD:-$PGUSER}
 
 mkdir -p "$FILEPORT"
+mkdir -p "$RUNNER"
 
 docker container run --name "$DOCKER_CONTAINER" \
     --env-file "$ENV_FILE" \
@@ -18,5 +19,8 @@ docker container run --name "$DOCKER_CONTAINER" \
     --env PGPASSWORD="$PGPASSWORD" \
     --env DOCKER_ENV="$DOCKER_ENV" \
     --mount type=bind,source="$FILEPORT",target=/fileport \
+    --mount type=bind,source="$FILEPORT/..",target=/fileport/root \
+    --mount type=bind,source="$RUNNER",target=/runner \
+    --mount source="$DOCKER_VOLUME",target=/volume \
     --network "$DOCKER_NETWORK" \
-    --rm "$DOCKER_IMAGE" ddl "$@"
+    --rm "$DOCKER_IMAGE" postgis-ddl "$@"

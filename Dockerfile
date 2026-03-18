@@ -2,16 +2,18 @@
 
 FROM ubuntu:24.04
 
-ARG POSTGRESQL_CLIENT_VERSION=17
-ENV POSTGRESQL_CLIENT_VERSION=${POSTGRESQL_CLIENT_VERSION}
-
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt update && apt install -y \
-    ca-certificates \
-    postgresql-client \
-    gettext-base \
-    && apt clean
+# Install the bats plugin.
+COPY conf/.plugins/bats /tmp/bats
+RUN /tmp/bats/install.sh
+
+# Install the runner plugin.
+COPY conf/.plugins/runner /tmp/runner
+RUN /tmp/runner/install.sh
+
+# Allow configuration before things start up.
+COPY conf/entrypoint /
 
 COPY conf/schema.sh /usr/local/bin/
 COPY conf/last.sh /usr/local/bin/
@@ -31,9 +33,10 @@ RUN chmod +x /usr/local/bin/schema.sh \
     /entrypoint
 
 ENTRYPOINT ["/entrypoint"]
-CMD ["ddl"]
+CMD ["postgis-ddl"]
 
 # Make this image work with dg build & dg push.
+COPY conf/.docker4gis /.docker4gis
 COPY build.sh run.sh /.docker4gis/
 
 # Set environment variables.

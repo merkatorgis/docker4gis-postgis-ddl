@@ -1,10 +1,7 @@
 #!/bin/bash
 
-POSTGRESQL_CLIENT_VERSION=${POSTGRESQL_CLIENT_VERSION:-17}
-
 docker image build \
-    --build-arg DOCKER_REGISTRY="$DOCKER_REGISTRY" \
-    --build-arg DOCKER_USER="$DOCKER_USER" \
-    --build-arg DOCKER_REPO="$DOCKER_REPO" \
-    --build-arg POSTGRESQL_CLIENT_VERSION="$POSTGRESQL_CLIENT_VERSION" \
-    -t "$DOCKER_IMAGE" .
+	--build-arg DOCKER_REGISTRY="$DOCKER_REGISTRY" \
+	--build-arg DOCKER_USER="$DOCKER_USER" \
+	--build-arg DOCKER_REPO="$DOCKER_REPO" \
+	-t "$DOCKER_IMAGE" .

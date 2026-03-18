@@ -1,8 +1,13 @@
 #!/bin/sh
 set -e
 
-if [ "$1" = 'ddl' ]; then
-    shift 1
+if [ "$1" = 'postgis-ddl' ]; then
+    shift
+
+    # Here you can configure stuff, if needed, before starting the original
+    # ENTRYPOINT/CMD (which you can find by `inspect`ing the image you're
+    # extending FROM).
+
     exec /onstart.sh "$@"
 fi
 
