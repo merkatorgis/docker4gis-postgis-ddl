@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-# Keep trying until the PostGIS database starts accepting connections.
-until pg.sh -c 'select 1' >/dev/null 2>&1; do
+# Wait until the database is ready.
+until [ "$(pg.sh -Atc "select current_setting('db.ready', true)")" = "true" ]; do
     sleep 1
 done
 
